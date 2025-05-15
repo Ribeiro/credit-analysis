@@ -3,9 +3,6 @@ import { Injectable } from '@nestjs/common';
 import { CreditApplicationDto } from '../dto/credit-application.dto';
 import { RuleChain } from './rule-chain.provider';
 import { CreditApplicationProcess } from '../model/credit-application-process';
-import { IncomeRule } from 'src/rules/income.rule';
-import { AgeRule } from 'src/rules/age.rule';
-import { CreditScoreRule } from 'src/rules/credit-score.rule';
 
 @Injectable()
 export class CreditAnalysisService {
@@ -14,11 +11,7 @@ export class CreditAnalysisService {
     failures: { rule: string; reason: string }[];
   }> {
     const process = new CreditApplicationProcess(app);
-    const chain = RuleChain.buildChain([
-      new AgeRule(),
-      new IncomeRule(),
-      new CreditScoreRule(),
-    ]);
+    const chain = await RuleChain.buildChain();
 
     await chain.evaluate(process);
 

@@ -1,4 +1,4 @@
-import { CreditApplicationProcess } from '../model/credit-application-process';
+import { CreditApplicationProcess } from '../../model/credit-application-process';
 
 export interface CreditRule {
   setNext(rule: CreditRule): CreditRule;

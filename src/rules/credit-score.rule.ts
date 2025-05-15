@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/require-await */
-import { BaseRule } from './base.rule';
+import { BaseRule } from './abstract/base.rule';
 import { CreditApplicationProcess } from '../model/credit-application-process';
+import { CreditRuleItem } from '../decorators/credit-rule-item.decorator';
 
+@CreditRuleItem()
 export class CreditScoreRule extends BaseRule {
   readonly name = 'CreditScoreRule';
 

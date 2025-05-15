@@ -1,5 +1,5 @@
 import { CreditApplicationDto } from '../dto/credit-application.dto';
-import { RuleFailure } from '../rules/rule-failure.interface';
+import { RuleFailure } from '../rules/interfaces/rule-failure.interface';
 
 export class CreditApplicationProcess {
   constructor(

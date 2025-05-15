@@ -1,6 +1,6 @@
-import { CreditRule } from './credit-rule.interface';
-import { CreditApplicationProcess } from '../model/credit-application-process';
-import { TerminalRule } from './terminal.rule';
+import { CreditRule } from '../interfaces/credit-rule.interface';
+import { CreditApplicationProcess } from '../../model/credit-application-process';
+import { TerminalRule } from '../terminal.rule';
 
 export abstract class BaseRule implements CreditRule {
   protected next: CreditRule = new TerminalRule();

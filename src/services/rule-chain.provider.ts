@@ -1,16 +1,42 @@
-import { CreditRule } from '../rules/credit-rule.interface';
-import { TerminalRule } from '../rules/terminal.rule';
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+// src/services/rule-chain.provider.ts
+import { CreditRule } from '../rules/interfaces/credit-rule.interface';
+import { BaseRule } from '../rules/abstract/base.rule';
+import 'reflect-metadata';
+import * as path from 'path';
+import * as glob from 'glob';
+
+type Constructor<T> = new (...args: any[]) => T;
 
 export class RuleChain {
-  static buildChain(rules: CreditRule[]): CreditRule {
-    if (rules.length === 0) return new TerminalRule();
+  static async buildChain(): Promise<CreditRule> {
+    const files = glob.sync(path.resolve(__dirname, '../rules/*.rule.{ts,js}'));
 
-    for (let i = 0; i < rules.length - 1; i++) {
-      rules[i].setNext(rules[i + 1]);
+    const ruleInstances: BaseRule[] = [];
+
+    for (const file of files) {
+      const module = await import(file);
+      for (const exported of Object.values(module)) {
+        if (
+          typeof exported === 'function' &&
+          Reflect.getMetadata('creditRuleItem', exported)
+        ) {
+          const ConstructorClass = exported as Constructor<BaseRule>;
+          const instance = new ConstructorClass();
+          ruleInstances.push(instance);
+        }
+      }
     }
 
-    rules[rules.length - 1].setNext(new TerminalRule());
+    for (let i = 0; i < ruleInstances.length - 1; i++) {
+      ruleInstances[i].setNext(ruleInstances[i + 1]);
+    }
 
-    return rules[0];
+    if (ruleInstances.length === 0) {
+      throw new Error('Nenhuma regra encontrada com @CreditRuleItem');
+    }
+
+    return ruleInstances[0];
   }
 }

@@ -1,6 +1,6 @@
 import { TerminalRule } from '../terminal.rule';
 import { CreditApplicationProcess } from '../../model/credit-application-process';
-import { CreditRule } from '../credit-rule.interface';
+import { CreditRule } from '../interfaces/credit-rule.interface';
 
 describe('TerminalRule', () => {
   let terminalRule: TerminalRule;
